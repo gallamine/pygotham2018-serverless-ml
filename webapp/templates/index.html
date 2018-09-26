@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>PyGotham Serverless Machine Learning Predictor</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!---- Unfurl stuff ---->
+
+  <meta property="og:url" content="https://www.gallamine.com"/>
+  <meta property="og:title" content="Predict patient events"/>
+  <meta property="og:description" content="Enter patient details and predict probability of a bad event."/>
+  <meta property="og:site_name" content="PyGotham Serverless Machine Learning Predictor"/>
+  <meta property=”og:image" content="/images/og/default.jpg"/>
+
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<link href='https://fonts.googleapis.com/css?family=Overpass Mono' rel='stylesheet'>
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<section class="section">
+    <div class="container">
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+    
+<form action="predict" id="ajaxform" >
+<input type="checkbox" name="chestpain" value="1.0" onchange="mySubmit(this.form)">Patient has chestpain? <Br>
+<input type="checkbox" name="hxofCABG" value="1.0" onchange="mySubmit(this.form)">patient history of bypass surgery        <Br>
+<input type="text" name="mbp" value="140.0" onchange="mySubmit(this.form)">maximum blood pressure                 <Br>
+<input type="checkbox" name="hxofMI" value="1.0" onchange="mySubmit(this.form)">patient history of heart attack                  <Br>
+
+<input type="radio" name="gender" value="male" onchange="mySubmit(this.form)">Male<Br>
+<input type="radio" name="gender" value="female" checked="checked" onchange="mySubmit(this.form)">Female<Br>
+<Br>
+<input type="radio" name="hxoCig" value="non-smoker" onchange="mySubmit(this.form)">non-smoker<Br>
+<input type="radio" name="hxoCig" value="moderate" checked="checked" onchange="mySubmit(this.form)">moderate smoker<Br>
+<input type="radio" name="hxoCig" value="heavy" onchange="mySubmit(this.form)">heavy smoker<Br>
+<br>
+<input type="radio" name="ecg" value="normal" onchange="mySubmit(this.form)">Normal ECG<Br>
+<input type="radio" name="ecg" value="equivocal" checked="checked" onchange="mySubmit(this.form)">equivocal ECG<Br>
+<input type="radio" name="ecg" value="MI" onchange="mySubmit(this.form)">MI ECG<Br>
+<br>
+<input type="checkbox" name="hxofPTCA" value="1.0" onchange="mySubmit(this.form)">patient history of angioplasty                 <Br>
+<input type="text" name="age" value="68.0" onchange="mySubmit(this.form)">age                      <Br>
+<input type="text" name="pctMphr" value="89.0" onchange="mySubmit(this.form)">% of maximum predicted heart rate achieved                  <Br>
+<input type="checkbox" name="restwma" value="1.0" onchange="mySubmit(this.form)">cardiologist sees wall motion anomoly on echocardiogram                    <Br>
+<input type="checkbox" name="hxofDM" value="1.0" checked="checked" onchange="mySubmit(this.form)">patient history of diabetes                     <Br>
+<input type="text" name="dobdose" value="30.0" onchange="mySubmit(this.form)">dobdose                  <Br>
+<input type="text" name="dpmaxdo" value="18900.0" onchange="mySubmit(this.form)">dpmaxdo              <Br>
+<input type="text" name="basebp" value="102.0" onchange="mySubmit(this.form)">basal blood pressure                  <Br>
+<input type="text" name="maxhr" value="135.0" onchange="mySubmit(this.form)">maximum heart rate                  <Br>
+<input type="text" name="sbp" value="100.0" onchange="mySubmit(this.form)">systolic blood pressure                     <Br>
+<input type="text" name="baseEF" value="23.0" onchange="mySubmit(this.form)">baseline cardiac ejection fraction (a measure of the heart's pumping efficiency)                   <Br>
+<input type="text" name="pkhr" value="137.0" onchange="mySubmit(this.form)">peak heart rate                   <Br>
+<input type="checkbox" name="hxofHT" value="1.0" checked="checked" onchange="mySubmit(this.form)">patient history of hypertension                     <Br>
+<input type="text" name="posSE" value="0.0" onchange="mySubmit(this.form)">stress echocardiogram was positive                      <Br>
+<input type="text" name="bhr" value="83.0" onchange="mySubmit(this.form)">basal heart rate                      <Br>
+</form>
+
+  <br>
+  Probability of bad event:<Br>
+<div id="here">
+
+
+</div>
+
+<script type="text/javascript">
+function mySubmit(theForm) {
+    $.ajax({ // create an AJAX call...
+        data: $(theForm).serialize(), // get the form data
+        type: $(theForm).attr('method'), // GET or POST
+        url: $(theForm).attr('action'), // the file to call
+        success: function (response) { // on success..
+            $('#here').html(response); // update the DIV
+        }
+    });
+}
+    </script>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
