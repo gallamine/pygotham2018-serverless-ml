@@ -32,7 +32,7 @@ From https://blog.zappa.io/posts/docker-zappa-and-python3
 Build Docker container:
 
 ```
-<!-- docker build -t myzappa . -->
+docker build -t myzappa .
 ```
 
 Add alias:
